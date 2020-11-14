@@ -5,7 +5,7 @@ const server = http.createServer((req, res) => {
     console.log(req.url)
 
     let body;
-for(let i = 0; i<=5; i++) {
+for(let i = 0; i<=4; i++) {
     switch(req.url) {
 
         case"/":
