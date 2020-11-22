@@ -4,7 +4,7 @@ class Item {
     img = ''
     count = 1
 
-    constructor(name, price, img) {
+    constructor({ name, price, img }) {
         this.name = name
         this.price = price
         this.img = img
@@ -15,7 +15,7 @@ class Item {
     }
 
     dec() {
-        this.count-- 
+        this.count--
     }
 
     getAddInBasketBtn() {
@@ -65,7 +65,7 @@ class Item {
         btn.classList.add('btn_minus')
         btn.innerHTML = '-'
 
-        btn.addEventListener('click',  () => {
+        btn.addEventListener('click', () => {
             const BasketInstance = new Basket()
             BasketInstance.remove(this)
 
@@ -86,7 +86,7 @@ class Item {
         <div class = " shop_img " >
             <img  src = "${img}" class = "shop_img_pruduct_basket" />
        </div> 
-        <span class = " shop_item_basket "> ${name}: ${price} x ${count} = ${price * count }    </span>  
+        <span class = " shop_item_basket "> ${name}: ${price} x ${count} = ${price * count}    </span>  
       
 
         
@@ -124,12 +124,12 @@ class List {
         this.render()
     }
 
-    remove (item) {
+    remove(item) {
         const exists = this.findGood(item)
-        if(!exists){
+        if (!exists) {
             return
         }
-        if (exists.count > 1 ) {
+        if (exists.count > 1) {
             exists.dec()
         } else {
             this.items = this.items.filter(good => item.name !== good.name)
@@ -166,7 +166,7 @@ class Basket extends List {
 
         const list = document.createElement('div')
         list.classList.add('basket_list')
-       
+
 
         btn.addEventListener('click', () => {
 
@@ -190,11 +190,11 @@ class Basket extends List {
     }
 
     getSumBasket() {
-        const sum = this.items.reduce((sum,good) => {
+        const sum = this.items.reduce((sum, good) => {
 
-            return sum + good.price*good.count
+            return sum + good.price * good.count
 
-        },0)
+        }, 0)
 
         const block = document.createElement('div')
         block.classList.add('basket_sum')
@@ -204,14 +204,14 @@ class Basket extends List {
     }
 
     getEmtyTemplateBasket() {
-        
+
 
         const block = document.createElement('div')
         block.classList.add('basket_emty')
         block.innerHTML = ` Корзина пуста `
 
         return block
-    
+
     }
 
     render() {
@@ -227,39 +227,97 @@ class Basket extends List {
             PlaceToRender.appendChild(template)
         })
 
-        if(this.items.length) {
-            PlaceToRender.appendChild(this. getSumBasket())
-        } else{
-            PlaceToRender.appendChild(this. getEmtyTemplateBasket())
+        if (this.items.length) {
+            PlaceToRender.appendChild(this.getSumBasket())
+        } else {
+            PlaceToRender.appendChild(this.getEmtyTemplateBasket())
         }
-        
+
     }
 
 }
 
 class ListItem extends List {
 
-    constructor(items) {
-        super(items)
+    _pageCounter = 1
+
+    constructor() {
+        super()
+
+        this.initShowMoreBtn()
+        let goodsPromise = this.fetchGoods()
+        goodsPromise.then(() => {
+            this.render()
+        })
+
+
+
+
+
     }
 
+    fetchGoods() {
+        const result = fetch(`http://localhost:3000/database/page${this._pageCounter}.json`)
+        return result
+            .then(res => {
+                return res.json()
+                console.log(result)
+            })
+            .then(data => {
+                this._pageCounter++
+                this.items.push(...data.data.map(cur => {
+                    return new Item(cur)
+                }))
+            })
+            .catch(e => {
+                this.removeShowMoreBtn()
+                console.log(e)
+            })
+
+
+    }
+
+    initShowMoreBtn() {
+
+        const btnMore = document.querySelector('.btn_more')
+        btnMore.addEventListener('click', () => {
+            this.fetchGoods()
+                .then(() => {
+                    this.render()
+                } )
+
+        } )
+    }
+
+    removeShowMoreBtn() {
+        const btnMore = document.querySelector('.btn_more')
+        btnMore.remove()
+    }
+       
+
     render() {
-        const PlaceToRender = document.querySelector('.shop')
-        if (!PlaceToRender) {
-            return
-        }
+            const PlaceToRender = document.querySelector('.shop')
+        if(!PlaceToRender) {
+                return
+            }
 
         PlaceToRender.innerHTML = ''
 
         this.items.forEach(item => {
-            const template = item.getMainTemplate()
-            PlaceToRender.appendChild(template)
-        })
-    }
+                const template = item.getMainTemplate()
+                PlaceToRender.appendChild(template)
+            })
+
+        }
 
 }
 
-const Good = new Item('Computer', 10000, "img/computer-apple3.jpg")
+
+    const BasketInstance = new Basket()
+    const ListInstance = new ListItem(BasketInstance)
+
+
+/*const Good = new Item('Computer', 10000, "img/computer-apple3.jpg")
 const Good2 = new Item('Acer', 15000, "img/computer-apple3.jpg")
 const Good3 = new Item('Phone', 30000, "img/computer-apple3.jpg")
 
@@ -271,5 +329,5 @@ ListItemIstance.add(Good3)
 
 ListItemIstance.render()
 
-const BasketInstance = new Basket()
+const BasketInstance = new Basket() */
 
