@@ -1,0 +1,8 @@
+{
+    "data": [
+      { "name": "Computer2", "price": 12000, "img": "img/computer-apple3.jpg" },
+      { "name": "Acer2", "price": 13000, "img": "img/computer-apple3.jpg"  },
+      { "name": "Phone2", "price": 15800, "img": "img/computer-apple3.jpg"  },
+      { "name": "Asus2", "price": 12000, "img": "img/computer-apple3.jpg"  }
+    ]
+  }
