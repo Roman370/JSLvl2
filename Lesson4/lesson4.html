@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>lesson№4</title>
+</head>
+
+<body>
+    <input type="text" placeholder="name" value="" >
+    <input type="text" placeholder="phone-number" value="">
+    <input type="text" placeholder="email" value="">
+    <button>Send</button>
+
+    <script>
+        document.querySelector("button").onclick =  (e) => {
+
+            let inputs = document.querySelectorAll("input");
+
+            
+
+            if (inputs[0].value != inputs[0].value.match(/[a-z]+/gi)) {
+                console.log('name not valid');
+                return;
+            } 
+
+            if (inputs[1].value != inputs[1].value.match(/^\+7\(\d{3}\)\d{3}-\d{4}$/gi)) {
+
+                console.log('numder not valid');
+                return;
+
+            }
+
+            if (inputs[2].value != inputs[2].value.match(/[A-Z0-9._%+-]+@[A-Z0-9-]+.+.[A-Z]{2,4}/igm )) {
+
+                console.log('email not valid');
+                return;
+
+            } 
+
+            
+            console.log('form valid');
+        } 
+
+
+
+    </script>
+</body>
+
+</html>
